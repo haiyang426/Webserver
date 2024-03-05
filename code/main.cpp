@@ -39,10 +39,6 @@ int main(){
 
     ret = listen(listenfd, 5);
 
-    // struct sockaddr_in client;
-    // socklen_t client_addrlength = sizeof( client );
-    // int sockfd = accept(listenfd, (struct sockaddr*)(&address), &client_addrlength);
-
     epoll_event events[MAX_EVENTS_NUMBER];
     int epollfd = epoll_create(5);
     epoll_event event;
