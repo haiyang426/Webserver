@@ -3,3 +3,6 @@
 
 ## 待实现
 1. 利用IO复用技术Epoll与线程池实现多线程的Reactor高并发模型；
+
+## 博客记录
+[IO复用](https://www.hystack.cn/webserver/)
