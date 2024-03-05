@@ -6,9 +6,21 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/epoll.h>  
+#include <fcntl.h>
+#include <iostream>
 #define PORT 2022
 #define MAX_EVENTS_NUMBER 5
 using namespace std;
+
+
+int set_non_blocking(int fd)
+{
+	int old_state = fcntl(fd, F_GETFL);
+	int new_state = old_state | O_NONBLOCK;
+	fcntl( fd, F_SETFL, new_state );
+
+	return old_state;	
+}
 
 
 int main(){
@@ -35,7 +47,7 @@ int main(){
     int epollfd = epoll_create(5);
     epoll_event event;
     event.data.fd = listenfd;
-    event.events = EPOLLIN;
+    event.events = EPOLLIN|EPOLLET;
 
     epoll_ctl(epollfd, EPOLL_CTL_ADD, listenfd, &event);
 
@@ -52,15 +64,23 @@ int main(){
                 struct epoll_event event;
                 event.data.fd = clientfd;
                 event.events = EPOLLIN|EPOLLET;
+                set_non_blocking(clientfd);
                 epoll_ctl(epollfd, EPOLL_CTL_ADD, clientfd, &event);
             }
-            else if(events[i].events & EPOLLIN ){
+            else if(events[i].events & EPOLLIN){
                 char buf[1024] = {0};
 				while(1)
 				{
 					memset(buf, '\0', sizeof(buf));
-					int recv_size  = recv(sockfd, buf, sizeof(buf), 0 );
-					if(recv_size == 0)
+					int recv_size  = recv(sockfd, buf, sizeof(buf), 0);
+                    if(recv_size < 0){
+					   	// close(sockfd);
+						if((errno == EAGAIN) || (errno == EWOULDBLOCK))
+						{
+							break;
+						}
+                    }
+					else if(recv_size == 0)
 					{
 					   	close(sockfd);
 						break;	
