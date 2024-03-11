@@ -2,18 +2,19 @@
 #define NET_CHANNEL_H
 #include <functional>
 #include <memory>
-#include "Timestamp.h"
+#include "webserver/base/Timestamp.h"
+#include "webserver/base/noncopyable.h"
 
-class Channel
+class Channel : noncopyable
 {
 public:
     Channel(int fd);
-    ~Channel();
+    ~Channel(){}
     
     typedef std::function<void()> EventCallback;
-    typedef std::function<void(Timestamp)> ReadEventCallback;
+    typedef std::function<void()> ReadEventCallback;
 
-    void handleEvent(Timestamp receiveTime);
+    void handleEvent();
     void setReadCallback(ReadEventCallback cb)
     { readCallback_ = std::move(cb); }
     void setWriteCallback(EventCallback cb)
@@ -23,10 +24,19 @@ public:
     void setErrorCallback(EventCallback cb)
     { errorCallback_ = std::move(cb); }
 
+
+    int fd() const { return fd_; }
+    int events() const { return events_; }
+    void set_revents(int revt) { revents_ = revt; }
+
+
 private:
     const int  fd_;
     int events_;
     int revents_;
+
+
+    void update();
 
     ReadEventCallback readCallback_;
     EventCallback writeCallback_;

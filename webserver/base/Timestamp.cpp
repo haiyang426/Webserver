@@ -2,9 +2,7 @@
 #include <iostream>
 #include <ctime>
 
-// Timestamp Timestamp::now()
-// {
-//      struct timeval tv;
-//      time_t now;
-     
-// }
+Timestamp Timestamp::now()
+{
+    return Timestamp(time(NULL));
+}
