@@ -24,17 +24,24 @@ public:
     void setErrorCallback(EventCallback cb)
     { errorCallback_ = std::move(cb); }
 
+    bool isNoneEvent() const { return events_ == kNoneEvent; }
 
     int fd() const { return fd_; }
     int events() const { return events_; }
     void set_revents(int revt) { revents_ = revt; }
+    int index() { return index_; }
+    void set_index(int idx) { index_ = idx; }
 
 
 private:
     const int  fd_;
     int events_;
     int revents_;
+    int index_;
 
+    static const int kNoneEvent;
+    static const int kReadEvent;
+    static const int kWriteEvent;
 
     void update();
 

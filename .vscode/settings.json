@@ -52,7 +52,8 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "typeinfo": "cpp",
-        "cerrno": "cpp"
+        "cerrno": "cpp",
+        "map": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

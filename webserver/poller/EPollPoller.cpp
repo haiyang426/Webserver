@@ -9,6 +9,10 @@
 #include <iostream>
 
 
+const int kNew = -1;
+const int kAdded = 1;
+const int kDeleted = 2;
+
 EPollPoller::EPollPoller()
 : epollfd_(epoll_create1(EPOLL_CLOEXEC)),
   events_(kInitEventListSize)
@@ -39,7 +43,7 @@ void EPollPoller::poll(int timeoutMs, ChannelList* activeChannels)
             events_.resize(events_.size()*2);
         }
     }
-    else if (numEvents > 0)
+    else if (numEvents == 0)
     {
 
     }
@@ -51,5 +55,58 @@ void EPollPoller::poll(int timeoutMs, ChannelList* activeChannels)
 
 void EPollPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels) const
 {
-    
+    for (int i = 0; i < numEvents; ++i)
+    {
+        Channel* channel = static_cast<Channel*>(events_[i].data.ptr);
+        channel->set_revents(events_[i].events);
+        activeChannels->push_back(channel);
+    }
+}
+
+void EPollPoller::update(int operation, Channel* channel)
+{
+    struct epoll_event event;
+    event.events = channel->events();
+    event.data.ptr = channel;
+    int fd = channel->fd();
+
+    epoll_ctl(epollfd_, operation, fd, &event);
+}
+
+void EPollPoller::updateChannel(Channel* channel)
+{
+    const int index = channel->index();
+    if (index == kNew || index == kDeleted)
+    {
+        if (index == kNew)
+        {
+            int fd = channel->fd();
+            channels_[fd] = channel;
+        }
+        channel->set_index(kAdded);
+        update(EPOLL_CTL_ADD, channel);
+    }
+    else
+    {
+        int fd = channel->fd();
+        if (channel->isNoneEvent())
+        {
+            update(EPOLL_CTL_DEL, channel);
+            channel->set_index(kDeleted);
+        }
+        else
+        {
+            update(EPOLL_CTL_MOD, channel);
+        }
+    }
+}
+
+void EPollPoller::removeChannel(Channel* channel)
+{
+    int fd = channel->fd();
+    channels_.erase(fd);
+
+    if (channel->index() == kAdded) update(EPOLL_CTL_DEL, channel);
+
+    channel->set_index(kNew);
 }

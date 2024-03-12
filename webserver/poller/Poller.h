@@ -22,6 +22,8 @@ public:
 
     virtual bool hasChannel(Channel* channel) const;
 
+    static Poller* newDefaultPoller();
+
 protected:
     typedef std::map<int, Channel*> ChannelMap;
     ChannelMap channels_;
