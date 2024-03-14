@@ -1,18 +1,18 @@
-#ifndef NET_POLLER_H
-#define NET_POLLER_H
-#include<vector>
-#include<map>
-#include "webserver/base/Timestamp.h"
+#pragma once
+#include <vector>
+#include <map>
 #include "webserver/base/noncopyable.h"
+#include "Channel.h"
 
 class Channel;
+class EventLoop;
 
 class Poller : noncopyable
 {
 public:
-    typedef std::vector<Channel*> ChannelList;
-    Poller(){}
-    ~Poller();
+    using ChannelList = std::vector<Channel*>;
+    Poller(EventLoop *loop);
+    virtual ~Poller();
 
     virtual void poll(int timeoutMs, ChannelList* activeChannels) = 0;
 
@@ -22,10 +22,12 @@ public:
 
     virtual bool hasChannel(Channel* channel) const;
 
-    static Poller* newDefaultPoller();
+    // static Poller* newDefaultPoller(EventLoop *loop);
 
 protected:
-    typedef std::map<int, Channel*> ChannelMap;
+    using ChannelMap = std::unordered_map<int, Channel*>;
     ChannelMap channels_;
+private:
+    EventLoop *ownerLoop_;
 };
-#endif
+

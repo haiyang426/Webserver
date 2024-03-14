@@ -7,7 +7,7 @@
 class EPollPoller : public Poller
 {
 public:
-    EPollPoller();
+    EPollPoller(EventLoop* loop);
     ~EPollPoller() override;
 
     void poll(int timeoutMs, ChannelList* activeChannels) override;

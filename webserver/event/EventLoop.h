@@ -10,7 +10,7 @@
 #include "CurrentThread.h"
 
 class Channel;
-class Poller;
+class EPollPoller;
 
 
 class EventLoop : noncopyable
@@ -44,7 +44,7 @@ private:
     std::atomic<bool> callingPendingFunctors_; 
     const pid_t threadId_; 
 
-    std::unique_ptr<Poller> poller_; 
+    std::unique_ptr<EPollPoller> poller_; 
 
     int wakeupFd_; 
     std::unique_ptr<Channel> wakeupChannel_;

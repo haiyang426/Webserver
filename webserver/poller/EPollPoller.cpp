@@ -1,6 +1,6 @@
 #include "webserver/poller/EPollPoller.h"
 #include "webserver/channel/Channel.h"
-
+#include "EventLoop.h"
 #include <assert.h>
 #include <errno.h>
 #include <unistd.h>
@@ -13,9 +13,11 @@ const int kNew = -1;
 const int kAdded = 1;
 const int kDeleted = 2;
 
-EPollPoller::EPollPoller()
-: epollfd_(epoll_create1(EPOLL_CLOEXEC)),
-  events_(kInitEventListSize)
+EPollPoller::EPollPoller(EventLoop* loop)
+:   
+    Poller(loop),
+    epollfd_(epoll_create1(EPOLL_CLOEXEC)),
+    events_(kInitEventListSize)
 {
     if (epollfd_ < 0)
     {
@@ -66,6 +68,7 @@ void EPollPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels)
 void EPollPoller::update(int operation, Channel* channel)
 {
     struct epoll_event event;
+    memset(&event, 0, sizeof(event));
     event.events = channel->events();
     event.data.ptr = channel;
     int fd = channel->fd();
@@ -106,7 +109,8 @@ void EPollPoller::removeChannel(Channel* channel)
     int fd = channel->fd();
     channels_.erase(fd);
 
-    if (channel->index() == kAdded) update(EPOLL_CTL_DEL, channel);
+    if (channel->index() == kAdded) 
+        update(EPOLL_CTL_DEL, channel);
 
     channel->set_index(kNew);
 }

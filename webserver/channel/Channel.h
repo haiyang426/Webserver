@@ -2,7 +2,6 @@
 #define NET_CHANNEL_H
 #include <functional>
 #include <memory>
-#include "webserver/base/Timestamp.h"
 #include "webserver/base/noncopyable.h"
 
 class EventLoop;
@@ -10,12 +9,12 @@ class EventLoop;
 class Channel : noncopyable
 {
 public:
-    Channel(int fd);
-    ~Channel(){}
+    Channel(EventLoop* loop, int fd);
+    ~Channel();
     
     typedef std::function<void()> EventCallback;
 
-    void handleEvent();
+    void HandlerEvent();
     void setReadCallback(EventCallback cb)
     { readCallback_ = std::move(cb); }
     void setWriteCallback(EventCallback cb)
@@ -33,6 +32,9 @@ public:
     int index() { return index_; }
     void set_index(int idx) { index_ = idx; }
 
+    EventLoop* ownerLoop() {return loop_;}
+
+    void remove();
 
 private:
     EventLoop* loop_;
@@ -52,6 +54,12 @@ private:
     EventCallback writeCallback_;
     EventCallback closeCallback_;
     EventCallback errorCallback_;
+
+    std::weak_ptr<void> tie_; 
+    bool tied_;
+
+    void HandleEventWithGuard();
+
 };
 
 #endif
