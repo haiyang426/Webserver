@@ -15,6 +15,7 @@ public:
     typedef std::function<void()> EventCallback;
 
     void HandlerEvent();
+    
     void setReadCallback(EventCallback cb)
     { readCallback_ = std::move(cb); }
     void setWriteCallback(EventCallback cb)
@@ -24,7 +25,15 @@ public:
     void setErrorCallback(EventCallback cb)
     { errorCallback_ = std::move(cb); }
 
-    bool isNoneEvent() const { return events_ == kNoneEvent; }
+    void enableReading() {events_ |= kReadEvent; update();} 
+    void disableReading() {events_ &= ~kReadEvent; update();}
+    void enableWriting() {events_ |= kWriteEvent; update();}
+    void disableWriting() {events_ &= ~kWriteEvent; update();}
+    void disableAll() {events_ = kNoneEvent; update();}
+
+    bool isWriting() const {return events_ & kWriteEvent;}
+    bool isReading() const {return events_ & kReadEvent;} 
+    bool isNoneEvent() const {return events_ == kNoneEvent;}
 
     int fd() const { return fd_; }
     int events() const { return events_; }
@@ -35,6 +44,8 @@ public:
     EventLoop* ownerLoop() {return loop_;}
 
     void remove();
+
+    void tie(const std::shared_ptr<void>&);
 
 private:
     EventLoop* loop_;
