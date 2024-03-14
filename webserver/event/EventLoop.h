@@ -5,7 +5,9 @@
 #include <vector>
 #include <memory>
 #include <atomic>
+#include <mutex>
 #include "webserver/base/noncopyable.h"
+#include "CurrentThread.h"
 
 class Channel;
 class Poller;
@@ -22,22 +24,33 @@ public:
     void loop();
     void quit();
 
+    void runInLoop(Functor cb); 
+    void queueInLoop(Functor cb); 
+    void wakeup();
+
     void updateChannel(Channel *channel);
     void removeChannel(Channel *channel);
     bool hasChannel(Channel *channel);
 
+    bool isInLoopThread() const {return threadId_ == CurrentThread::tid();}
 
 private:
-    typedef std::vector<Channel*> ChannelList;
+    void handleRead(); 
+    void doPendingFunctors();
 
-    std::unique_ptr<Poller> poller_;
+    using ChannelList = std::vector<Channel*>;
+    std::atomic<bool> looping_; 
+    std::atomic<bool> quit_; 
+    std::atomic<bool> callingPendingFunctors_; 
+    const pid_t threadId_; 
 
+    std::unique_ptr<Poller> poller_; 
+
+    int wakeupFd_; 
+    std::unique_ptr<Channel> wakeupChannel_;
     ChannelList activeChannels_;
-    Channel* currentActiveChannel_;
-
-    void handleRead();
-
-    std::atomic<bool> quit_;
-    std::atomic<bool> looping_;
+    Channel *currentActiveChannel_;
+    std::vector<Functor> pendingFunctors_; 
+    std::mutex mutex_; 
 }
 #endif

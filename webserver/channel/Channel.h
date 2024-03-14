@@ -5,6 +5,8 @@
 #include "webserver/base/Timestamp.h"
 #include "webserver/base/noncopyable.h"
 
+class EventLoop;
+
 class Channel : noncopyable
 {
 public:
@@ -12,10 +14,9 @@ public:
     ~Channel(){}
     
     typedef std::function<void()> EventCallback;
-    typedef std::function<void()> ReadEventCallback;
 
     void handleEvent();
-    void setReadCallback(ReadEventCallback cb)
+    void setReadCallback(EventCallback cb)
     { readCallback_ = std::move(cb); }
     void setWriteCallback(EventCallback cb)
     { writeCallback_ = std::move(cb); }
@@ -34,6 +35,7 @@ public:
 
 
 private:
+    EventLoop* loop_;
     const int  fd_;
     int events_;
     int revents_;
@@ -45,7 +47,8 @@ private:
 
     void update();
 
-    ReadEventCallback readCallback_;
+    bool addedToLoop_;
+    EventCallback readCallback_;
     EventCallback writeCallback_;
     EventCallback closeCallback_;
     EventCallback errorCallback_;
