@@ -6,7 +6,7 @@
 #include <memory>
 #include <atomic>
 #include <mutex>
-#include "webserver/base/noncopyable.h"
+#include "noncopyable.h"
 #include "CurrentThread.h"
 
 class Channel;
