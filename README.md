@@ -11,10 +11,26 @@
 6. 利用更多C++11的特性
 
 ## To be completed 待实现
-1. 使用状态机解析了HTTP请求
-2. 使用基于小根堆的定时器关闭超时请求
-3. 使用内存池减少内存分配和释放的开销，以及减少内存碎片
-4. 优化代码
+1. WebBench压力测试
+2. 使用状态机解析了HTTP请求
+3. 使用基于小根堆的定时器关闭超时请求
+4. 使用内存池减少内存分配和释放的开销，以及减少内存碎片
+5. 优化代码
+
+## usage with echo server
+    mkdir build
+    cd build
+
+    cmake ..
+    make
+
+    ##server
+    ./bin/Webserver
+
+    ##client
+    nc 127.0.0.1 2024
+
+
 
 ## 博客记录
 [IO复用](https://www.hystack.cn/webserver01/)

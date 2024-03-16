@@ -8,6 +8,3 @@ target_link_libraries(WebServer libserver_base)
 
 
 add_subdirectory(base)
-# add_subdirectory(channel)
-# add_subdirectory(event)
-# add_subdirectory(poller)
