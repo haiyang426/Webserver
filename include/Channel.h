@@ -1,8 +1,7 @@
-#ifndef NET_CHANNEL_H
-#define NET_CHANNEL_H
+#pragma once
 #include <functional>
 #include <memory>
-#include "webserver/base/noncopyable.h"
+#include "noncopyable.h"
 
 class EventLoop;
 
@@ -72,5 +71,3 @@ private:
     void HandleEventWithGuard();
 
 };
-
-#endif

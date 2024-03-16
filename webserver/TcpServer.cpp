@@ -28,7 +28,7 @@ TcpServer::TcpServer(EventLoop* loop,
     nextConnId_(1),
     started_(0)
 {
-    acceptor_->setNewConnectionCallback(bind(&TcpServer::newConnection, this, _1, _2));
+    acceptor_->setNewConnectionCallback(bind(&TcpServer::newConnection, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 TcpServer::~TcpServer()
@@ -42,7 +42,7 @@ TcpServer::~TcpServer()
     }
 }
 
-void TcpServer::setThreadNum(int numThreads)=
+void TcpServer::setThreadNum(int numThreads)
 {
     threadPool_->setThreadNum(numThreads);
 }
@@ -82,7 +82,7 @@ void TcpServer::newConnection(int sockfd, const InetAddress &peerAddr)
     conn->setConnectionCallback(connectionCallback_);
     conn->setMessageCallback(messageCallback_);
     conn->setWriteCompleteCallback(writeCompleteCallback_);
-    conn->setCloseCallback(bind(&TcpServer::removeConnection, this, _1));
+    conn->setCloseCallback(bind(&TcpServer::removeConnection, this, std::placeholders::_1));
 
     ioLoop->runInLoop(bind(&TcpConnection::connectEstablished, conn));
     

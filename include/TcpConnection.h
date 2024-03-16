@@ -66,11 +66,11 @@ private:
 
     enum StateE {kDisconnected, kConnecting, kConnected, kDisconnecting};
     void setState(StateE state) {state_ = state;}
-    void handleRead(TimeStamp receiveTime);
+    void handleRead();
     void handleWrite();
     void handleClose();
     void handleError();
     
     void sendInLoop(const void* message, size_t len);
     void shutdownInLoop();
-}
+};

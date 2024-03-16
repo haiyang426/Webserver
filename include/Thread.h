@@ -29,4 +29,4 @@ private:
     std::string name_;
     std::shared_ptr<std::thread> thread_;
     static std::atomic<int> numCreated_;
-}
+};

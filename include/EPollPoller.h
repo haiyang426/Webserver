@@ -1,8 +1,7 @@
-#ifndef POLLER_EPOLLPOLLER_H
-#define POLLER_EPOLLPOLLER_H
-
+#pragma once
 #include <vector>
-#include "webserver/poller/Poller.h"
+#include "Poller.h"
+#include <sys/epoll.h>
 
 class EPollPoller : public Poller
 {
@@ -29,7 +28,4 @@ private:
     int epollfd_;
 
     EventList events_;
-}
-
-
-#endif // POLLER_EPOLLPOLLER_H
+};

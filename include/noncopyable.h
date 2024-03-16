@@ -1,5 +1,4 @@
-#ifndef BASE_NONCOPYABLE_H
-#define BASE_NONCOPYABLE_H
+#pragma once
 
 class noncopyable
 {
@@ -11,6 +10,3 @@ class noncopyable
   noncopyable() = default;
   ~noncopyable() = default;
 };
-
-
-#endif  // BASE_NONCOPYABLE_H

@@ -1,13 +1,7 @@
-#ifndef BASE_COPYABLE_H
-#define BASE_COPYABLE_H
-
+#pragma once
 class copyable
 {
  protected:
   copyable() = default;
   ~copyable() = default;
 };
-
-
-
-#endif  // BASE_COPYABLE_H

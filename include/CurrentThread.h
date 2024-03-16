@@ -1,5 +1,4 @@
 #pragma once
-
 #include <unistd.h>
 #include <sys/syscall.h>
 
@@ -17,4 +16,4 @@ namespace CurrentThread
         }
         return t_cachedTid;
     }
-}
+};

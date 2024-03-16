@@ -3,6 +3,7 @@
 #include "Channel.h"
 #include "EventLoop.h"
 #include "Logger.h"
+
 #include <string>
 
 using namespace std;
@@ -28,7 +29,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string &nameArg, int so
     peerAddr_(peerAddr),
     highWaterMark_(64*1024*1024) //64M
 {
-    channel_->setReadCallback(bind(&TcpConnection::handleRead, this, _1));
+    channel_->setReadCallback(bind(&TcpConnection::handleRead, this));
     channel_->setWriteCallback(bind(&TcpConnection::handleWrite, this));
     channel_->setCloseCallback(bind(&TcpConnection::handleClose, this));
     channel_->setErrorCallback(bind(&TcpConnection::handleError, this));

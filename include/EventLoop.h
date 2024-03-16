@@ -1,6 +1,4 @@
-#ifndef NET_EVENTLOOP_H
-#define NET_EVENTLOOP_H
-
+#pragma once
 #include <functional>
 #include <vector>
 #include <memory>
@@ -8,7 +6,7 @@
 #include <mutex>
 #include "noncopyable.h"
 #include "CurrentThread.h"
-
+#include "EPollPoller.h"
 class Channel;
 class EPollPoller;
 
@@ -16,7 +14,7 @@ class EPollPoller;
 class EventLoop : noncopyable
 {
 public:
-    typedef std::function<void()> Functor;
+    using Functor = std::function<void()>; 
 
     EventLoop();
     ~EventLoop();
@@ -52,5 +50,4 @@ private:
     Channel *currentActiveChannel_;
     std::vector<Functor> pendingFunctors_; 
     std::mutex mutex_; 
-}
-#endif
+};

@@ -2,23 +2,14 @@
 #include "EventLoop.h"
 #include "InetAddress.h"
 #include "TcpServer.h"
+#include "TcpConnection.h"
+#include "Logger.h"
+#include "Buffer.h"
 #define PORT 2024
 #define MAX_EVENTS_NUMBER 5
 using namespace std;
 
-int main(){
-    EventLoop loop;
 
-    InetAddress addr(PORT);
-    
-    EchoServer server(&loop, addr, "EchoServer-01");
-
-    server.start(); 
-
-    loop.loop();
-
-    return 0;
-}
 
 class EchoServer
 {
@@ -35,7 +26,7 @@ public:
             
         server_.setMessageCallback(
             std::bind(&EchoServer::onMessage, this,
-                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)
+                std::placeholders::_1, std::placeholders::_2)
         );
 
         
@@ -54,13 +45,26 @@ private:
     }
 
     void onMessage(const TcpConnectionPtr &conn,
-                   Buffer *buf,
-                   Timestamp time)
+                   Buffer *buf)
     {
-        std::string msg = buf->retrieveAllAsString();
+        std::string msg = buf->retrieveAllString();
         conn->send(msg);	
         conn->shutdown(); 
     }
     EventLoop *loop_;
     TcpServer server_;
 };
+
+int main(){
+    EventLoop loop;
+
+    InetAddress addr(PORT);
+    
+    EchoServer server(&loop, addr, "EchoServer-01");
+
+    server.start(); 
+
+    loop.loop();
+
+    return 0;
+}

@@ -33,7 +33,7 @@ Acceptor::~Acceptor()
 void Acceptor::listen()
 {
     listenning_ = true;
-    acceptSocket_.listen();
+    acceptSocket_.listening();
     acceptChannel_.enableReading();
 }
 

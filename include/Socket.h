@@ -12,7 +12,7 @@ public:
 public:
     int fd() const {return sockfd_;}
     void bindAddress(const InetAddress &localaddr); 
-    void listen(); 
+    void listening(); 
     int accept(InetAddress *peeradd); 
     void shutdownWrite();  
 

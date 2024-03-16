@@ -6,6 +6,8 @@
 #include "EventLoop.h"
 #include "CurrentThread.h"
 
+using namespace std;
+
 const int kPollTimeMs = 10000;
 __thread EventLoop* t_loopInThisThread = nullptr;
 
@@ -21,7 +23,7 @@ EventLoop::EventLoop() :
     quit_(false), 
     callingPendingFunctors_(false), 
     threadId_(CurrentThread::tid()), 
-    poller_(EPollPoller(this)), 
+    poller_(new EPollPoller(this)), 
     wakeupFd_(createEventfd()), 
     wakeupChannel_(new Channel(this, wakeupFd_)),
     currentActiveChannel_(nullptr) 
@@ -58,7 +60,7 @@ void EventLoop::loop()
 
         for(Channel *channel : activeChannels_)
         {
-            channel->handleEvent();
+            channel->HandlerEvent();
         }
 
         doPendingFunctors();
@@ -106,7 +108,7 @@ void EventLoop::handleRead()
 
 void EventLoop::doPendingFunctors()
 {
-    std::vector<Functor> functors;
+    vector<Functor> functors;
     callingPendingFunctors_ = true;
 
    {

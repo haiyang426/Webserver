@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
 #include <functional>
+// #include "TcpConnection.h"
+// #include "Buffer.h"
 class Buffer;
 class TcpConnection;
 

@@ -122,4 +122,4 @@ private:
     std::vector<char> buffer_;
     size_t readerIndex_; 
     size_t writerIndex_;
-}
+};

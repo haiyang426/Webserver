@@ -31,4 +31,4 @@ private:
     Channel acceptChannel_;
     NewConnectionCallback newConnectionCallback_;
     bool listenning_;
-}
+};

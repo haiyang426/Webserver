@@ -19,7 +19,7 @@ void Socket::bindAddress(const InetAddress &localaddr)
     bind(sockfd_, (sockaddr*)localaddr.getSockAddr(), sizeof(sockaddr_in));
 }
 
-void Socket::listen()
+void Socket::listening()
 {
     listen(sockfd_, 1024);
 }
