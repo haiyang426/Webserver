@@ -1,0 +1,11 @@
+include_directories(${PROJECT_SOURCE_DIR}/include)
+
+# if(SERVER_VERSION STREQUAL "echo")
+# add_executable(echo_server echo.cpp)
+# target_link_libraries(echo_server libserver_webserver libserver_base)
+# elseif(SERVER_VERSION STREQUAL "http")
+add_executable(http_server http.cpp)
+target_link_libraries(http_server libserver_webserver libserver_base libserver_http)
+# else()
+#   message(FATAL_ERROR "Invalid MAIN_VERSION specified. Choose 'echo' or 'http'.")
+# endif()

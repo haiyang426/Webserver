@@ -2,7 +2,8 @@
 #include <vector>
 #include <sys/types.h>
 #include <string>
-
+#include <assert.h>
+#include <algorithm>
 class Buffer
 {
 public:
@@ -71,6 +72,11 @@ public:
         }
     }
 
+    void append(const std::string& str)
+    {
+        append(str.data(), str.length());
+    }
+
     void append(const char* data, size_t len)
     {
         ensureWritableBytes(len);
@@ -90,6 +96,20 @@ public:
 
     ssize_t readFd(int fd, int* saveErrno);
     ssize_t writeFd(int fd, int* saveErrno);
+
+    const char* findCRLF() const
+    {
+        // FIXME: replace with memmem()?
+        const char* crlf = std::search(peek(), beginWrite(), kCRLF, kCRLF+2);
+        return crlf == beginWrite() ? NULL : crlf;
+    }
+
+    void retrieveUntil(const char* end)
+    {
+        assert(peek() <= end);
+        assert(end <= beginWrite());
+        retrieve(end - peek());
+    }
 
 private:
 
@@ -122,4 +142,6 @@ private:
     std::vector<char> buffer_;
     size_t readerIndex_; 
     size_t writerIndex_;
+
+    static const char kCRLF[];
 };

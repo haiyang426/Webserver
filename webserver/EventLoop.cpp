@@ -5,6 +5,7 @@
 #include <mutex>
 #include "EventLoop.h"
 #include "CurrentThread.h"
+#include "Timestamp.h"
 
 using namespace std;
 
@@ -56,11 +57,11 @@ void EventLoop::loop()
     while(!quit_)
     {
         activeChannels_.clear();
-        poller_->poll(kPollTimeMs, &activeChannels_);
+        TimeStamp pollReturnTime_  = poller_->poll(kPollTimeMs, &activeChannels_);
 
         for(Channel *channel : activeChannels_)
         {
-            channel->HandlerEvent();
+            channel->HandlerEvent(pollReturnTime_);
         }
 
         doPendingFunctors();

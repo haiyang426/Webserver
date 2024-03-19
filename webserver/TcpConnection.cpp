@@ -29,7 +29,7 @@ TcpConnection::TcpConnection(EventLoop* loop, const std::string &nameArg, int so
     peerAddr_(peerAddr),
     highWaterMark_(64*1024*1024) //64M
 {
-    channel_->setReadCallback(bind(&TcpConnection::handleRead, this));
+    channel_->setReadCallback(bind(&TcpConnection::handleRead, this, std::placeholders::_1));
     channel_->setWriteCallback(bind(&TcpConnection::handleWrite, this));
     channel_->setCloseCallback(bind(&TcpConnection::handleClose, this));
     channel_->setErrorCallback(bind(&TcpConnection::handleError, this));
@@ -135,13 +135,13 @@ void TcpConnection::connectEstablished()
 
 }
 
-void TcpConnection::handleRead()
+void TcpConnection::handleRead(TimeStamp receiveTime)
 {
     int savedErrno = 0; 
     ssize_t n = inputBuffer_.readFd(channel_->fd(), &savedErrno);
     if(n > 0)
     {
-        messageCallback_(shared_from_this(), &inputBuffer_);
+        messageCallback_(shared_from_this(), &inputBuffer_, receiveTime);
     }
     else if(n == 0)
         handleClose();

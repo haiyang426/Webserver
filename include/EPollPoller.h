@@ -3,13 +3,14 @@
 #include "Poller.h"
 #include <sys/epoll.h>
 
+
 class EPollPoller : public Poller
 {
 public:
     EPollPoller(EventLoop* loop);
     ~EPollPoller() override;
 
-    void poll(int timeoutMs, ChannelList* activeChannels) override;
+    TimeStamp poll(int timeoutMs, ChannelList *activeChannels) override;
 
     void updateChannel(Channel* channel) override;
 

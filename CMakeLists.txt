@@ -5,6 +5,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+set(SERVER_VERSION "echo" CACHE STRING "Select which main version to compile")
+
 message("-- system arch:  ${CMAKE_SYSTEM_PROCESSOR}")
 message("-- output path:  ${PROJECT_OUTPUT_DIR} ")
 
@@ -25,3 +27,4 @@ string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 include_directories(${PROJECT_INCLUDE_DIR})
 
 add_subdirectory(webserver)
+add_subdirectory(app)

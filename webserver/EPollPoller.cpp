@@ -7,7 +7,7 @@
 #include <sys/epoll.h>
 #include <string.h>
 #include <iostream>
-
+#include "Logger.h"
 
 const int kNew = -1;
 const int kAdded = 1;
@@ -31,11 +31,12 @@ EPollPoller::~EPollPoller()
   close(epollfd_);
 }
 
-void EPollPoller::poll(int timeoutMs, ChannelList* activeChannels)
+TimeStamp EPollPoller::poll(int timeoutMs, ChannelList *activeChannels)
 {
     int numEvents = epoll_wait(epollfd_, &*events_.begin(), static_cast<int>(events_.size()), timeoutMs);
 
     int savedErrno = errno;
+    TimeStamp now(TimeStamp::now());
 
     if (numEvents > 0)
     {
@@ -47,12 +48,17 @@ void EPollPoller::poll(int timeoutMs, ChannelList* activeChannels)
     }
     else if (numEvents == 0)
     {
-
+        LOG_DEBUG("%s timeout! \n", __FUNCTION__);
     }
     else
     {
-
+        if(savedErrno != EINTR)
+        {
+            errno = savedErrno;
+            LOG_ERROR("EPollPoller::poll() err!");
+        }
     }
+    return now;
 }
 
 void EPollPoller::fillActiveChannels(int numEvents, ChannelList* activeChannels) const

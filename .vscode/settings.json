@@ -57,7 +57,15 @@
         "cinttypes": "cpp",
         "cstring": "cpp",
         "buffer": "cpp",
-        "netfwd": "cpp"
+        "netfwd": "cpp",
+        "sstream": "cpp",
+        "bitset": "cpp",
+        "complex": "cpp",
+        "list": "cpp",
+        "set": "cpp",
+        "optional": "cpp",
+        "typeindex": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <atomic>
+#include <boost/any.hpp>
 
 #include "noncopyable.h"
 #include "InetAddress.h"
@@ -11,6 +12,7 @@
 class Channel;
 class EventLoop;
 class Socket;
+class TimeStamp;
 
 class TcpConnection : public noncopyable, public std::enable_shared_from_this<TcpConnection>
 {
@@ -40,6 +42,10 @@ public:
 
     void connectEstablished();
     void connectDestroyed();
+    
+    void setContext(const boost::any& context){ context_ = context; }
+    const boost::any& getContext() const { return context_; }
+    boost::any* getMutableContext() {return &context_; }
 
 private:
     EventLoop *loop_;
@@ -63,10 +69,12 @@ private:
     Buffer inputBuffer_;
     Buffer outputBuffer_;
 
+    boost::any context_;
+
 
     enum StateE {kDisconnected, kConnecting, kConnected, kDisconnecting};
     void setState(StateE state) {state_ = state;}
-    void handleRead();
+    void handleRead(TimeStamp receiveTime);
     void handleWrite();
     void handleClose();
     void handleError();

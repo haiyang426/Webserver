@@ -29,18 +29,18 @@ void Channel::tie(const shared_ptr<void>& obj)
 	tied_ = true;
 }
 
-void Channel::HandlerEvent()
+void Channel::HandlerEvent(TimeStamp receiveTime)
 {
     if(tied_){
         shared_ptr<void> guard = tie_.lock();
         if (guard)
-            HandleEventWithGuard();
+            HandleEventWithGuard(receiveTime);
     }
     else
-        HandleEventWithGuard();
+        HandleEventWithGuard(receiveTime);
 }
 
-void Channel::HandleEventWithGuard()
+void Channel::HandleEventWithGuard(TimeStamp receiveTime)
 {
     if((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN))
     {
@@ -55,7 +55,7 @@ void Channel::HandleEventWithGuard()
     if(revents_ & (EPOLLIN | EPOLLPRI))
     {
         if(readCallback_)
-            readCallback_();
+            readCallback_(receiveTime);
     }
     if (revents_ & EPOLLOUT)
     {

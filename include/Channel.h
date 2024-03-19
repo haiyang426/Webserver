@@ -2,8 +2,10 @@
 #include <functional>
 #include <memory>
 #include "noncopyable.h"
+#include "Timestamp.h"
 
 class EventLoop;
+
 
 class Channel : noncopyable
 {
@@ -11,11 +13,12 @@ public:
     Channel(EventLoop* loop, int fd);
     ~Channel();
     
-    typedef std::function<void()> EventCallback;
+    using EventCallback = std::function<void()>;
+    using ReadEventCallback = std::function<void(TimeStamp)>;
 
-    void HandlerEvent();
+    void HandlerEvent(TimeStamp receive_time);
     
-    void setReadCallback(EventCallback cb)
+    void setReadCallback(ReadEventCallback cb)
     { readCallback_ = std::move(cb); }
     void setWriteCallback(EventCallback cb)
     { writeCallback_ = std::move(cb); }
@@ -60,7 +63,7 @@ private:
     void update();
 
     bool addedToLoop_;
-    EventCallback readCallback_;
+    ReadEventCallback readCallback_;
     EventCallback writeCallback_;
     EventCallback closeCallback_;
     EventCallback errorCallback_;
@@ -68,6 +71,6 @@ private:
     std::weak_ptr<void> tie_; 
     bool tied_;
 
-    void HandleEventWithGuard();
+    void HandleEventWithGuard(TimeStamp receiveTime);;
 
 };
