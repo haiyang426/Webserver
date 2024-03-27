@@ -31,6 +31,21 @@
     nc 127.0.0.1 2024
 
 
+## usage with http server
+    mkdir build
+    cd build
+
+    cmake ..
+    make
+
+    ##server
+    ./bin/http_server
+
+    ##webbench
+    ./webbench -c 1000 -t 10 http://127.0.0.1:2024/
+
+![alt text](image.png)
+
 
 ## 博客记录
 [IO复用](https://www.hystack.cn/webserver01/)

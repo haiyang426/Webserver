@@ -3,7 +3,7 @@
 #include "Channel.h"
 #include "EventLoop.h"
 #include "Logger.h"
-
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -139,6 +139,8 @@ void TcpConnection::handleRead(TimeStamp receiveTime)
 {
     int savedErrno = 0; 
     ssize_t n = inputBuffer_.readFd(channel_->fd(), &savedErrno);
+    
+    // std::cout<<n<<endl;
     if(n > 0)
     {
         messageCallback_(shared_from_this(), &inputBuffer_, receiveTime);

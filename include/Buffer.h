@@ -4,11 +4,12 @@
 #include <string>
 #include <assert.h>
 #include <algorithm>
+#include <iostream>
 class Buffer
 {
 public:
     static const size_t kCheapPrepend = 8;
-    static const size_t kInitialSize = 1024;
+    static const size_t kInitialSize = 2024;
 
     explicit Buffer(size_t initialSize = kInitialSize)
         : buffer_(kCheapPrepend + initialSize),
@@ -74,13 +75,18 @@ public:
 
     void append(const std::string& str)
     {
+        
         append(str.data(), str.length());
     }
 
     void append(const char* data, size_t len)
     {
+        // std::cout<<readableBytes()<<std::endl;
+        // std::cout<<writableBytes()<<std::endl;
         ensureWritableBytes(len);
+        // std::cout<<"sssss"<<std::endl;
         std::copy(data, data+len, beginWrite());
+        // std::cout<<"sssss"<<std::endl;
         writerIndex_ += len;
     }
 

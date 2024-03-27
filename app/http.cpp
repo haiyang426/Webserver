@@ -10,6 +10,8 @@ int main(){
     
     HttpServer server(&loop, addr, "EchoServer-01");
 
+    server.setThreadNum(12);
+
     server.start(); 
 
     loop.loop();
