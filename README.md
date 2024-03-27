@@ -42,6 +42,10 @@
     ##webbench
     ./webbench -c 1000 -t 10 http://127.0.0.1:2024/
 
+## 测试环境
+云服务器
+Ubuntu:22.04
+2核8G
 ![alt text](image.png)
 
 
