@@ -190,7 +190,7 @@ void TcpConnection::handleWrite()
 
 void TcpConnection::handleClose()
 {
-    LOG_INFO("fd=%d state=%d \n",channel_->fd(), static_cast<int>(state_));
+    // LOG_INFO("fd=%d state=%d \n",channel_->fd(), static_cast<int>(state_));
     setState(kDisconnected);
     channel_->disableAll();
     TcpConnectionPtr connPtr(shared_from_this());

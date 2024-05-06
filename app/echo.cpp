@@ -49,10 +49,11 @@ private:
     {
         std::string msg = buf->retrieveAllString();
         conn->send(msg);	
-        // conn->shutdown(); 
+        conn->shutdown(); 
     }
-    EventLoop *loop_;
+    
     TcpServer server_;
+    EventLoop *loop_;
 };
 
 int main(){

@@ -13,12 +13,15 @@ message("-- output path:  ${PROJECT_OUTPUT_DIR} ")
 set(CXX_FLAGS
     -g
     -Wall
-    -std=c++11
-    -D_PTHREADS
-    -Wno-unused-parameter
+    # -v
+    # -std=c++11
+    # -D_PTHREADS
+    # -Wno-unused-parameter
+    
 )
 
-set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_FLAGS "-stdlib=libc++")
 # set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 # set(CMAKE_CXX_FLAGS_RELEASE "-O0")
 

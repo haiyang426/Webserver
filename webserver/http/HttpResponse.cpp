@@ -13,7 +13,7 @@ void HttpResponse::appendToBuffer(Buffer* output) const
     output->append(statusMessage_);
     output->append("\r\n");
     oss.clear();
-    std::cout<<"closeConnection_" << closeConnection_<<std::endl;
+    // std::cout<<"closeConnection_" << closeConnection_<<std::endl;
     if(closeConnection_)
     {
         output->append("Connection: close\r\n");

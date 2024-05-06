@@ -46,7 +46,7 @@
 云服务器
 Ubuntu:22.04
 2核8G
-![alt text](image.png)
+![alt text](image-2.png)
 
 
 ## 博客记录

@@ -2,16 +2,17 @@
 #include "Logger.h"
 #include <strings.h>
 #include "TcpConnection.h"
+
 using namespace std;
 
-static EventLoop* CheckLoopNotNull(EventLoop* loop)
-{
-    if(loop == nullptr)
-    {
-        LOG_FATAL("%s:%s:%d mainLoop is null \b", __FILE__, __FUNCTION__, __LINE__);
-    }
-    return loop;
-}
+// static EventLoop* CheckLoopNotNull(EventLoop* loop)
+// {
+//     if(loop == nullptr)
+//     {
+//         LOG_FATAL("%s:%s:%d mainLoop is null \b", __FILE__, __FUNCTION__, __LINE__);
+//     }
+//     return loop;
+// }
 
 TcpServer::TcpServer(EventLoop* loop, 
                      const InetAddress &listenAddr, 
@@ -63,8 +64,8 @@ void TcpServer::newConnection(int sockfd, const InetAddress &peerAddr)
     snprintf(buf, sizeof(buf), "-%s#%d", ipPort_.c_str(), nextConnId_);
     ++nextConnId_; 
     string connName = name_ + buf;
-    LOG_INFO("TcpServer::newConnection [%s] - new connection [%s] from %s \n",
-        name_.c_str(), connName.c_str(), peerAddr.toIpPort().c_str());
+    // LOG_INFO("TcpServer::newConnection [%s] - new connection [%s] from %s \n",
+    //     name_.c_str(), connName.c_str(), peerAddr.toIpPort().c_str());
 
     sockaddr_in local;
     bzero(&local, sizeof(local));
@@ -97,8 +98,8 @@ void TcpServer::removeConnection(const TcpConnectionPtr &conn)
 
 void TcpServer::removeConnectionInLoop(const TcpConnectionPtr &conn)
 {
-    LOG_INFO("TcpServer::removeConnectionInLoop [%s] - connection %s\n", 
-        name_.c_str(), conn->name().c_str());
+    // LOG_INFO("TcpServer::removeConnectionInLoop [%s] - connection %s\n", 
+    //     name_.c_str(), conn->name().c_str());
     connections_.erase(conn->name());
     EventLoop *ioLoop = conn->getLoop();
     ioLoop->queueInLoop(bind(&TcpConnection::connectDestroyed, conn));

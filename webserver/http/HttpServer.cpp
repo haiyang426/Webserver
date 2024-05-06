@@ -5,7 +5,7 @@
 #include "HttpResponse.h"
 #include "TcpConnection.h"
 // class TcpConnection;
-
+#include <time.h>
 using namespace std::placeholders;
 
 void defaultHttpCallback(const HttpRequest&, HttpResponse* resp)
@@ -38,17 +38,19 @@ void HttpServer::onConnection(const TcpConnectionPtr& conn)
 {
     if (conn->connected())
     {
-        LOG_INFO("Connection UP : %s", conn->peerAddress().toIpPort().c_str());
+        // LOG_INFO("Connection UP : %s", conn->peerAddress().toIpPort().c_str());
         conn->setContext(HttpContext());
     }
     else
     {
-        LOG_INFO("Connection DOWN : %s", conn->peerAddress().toIpPort().c_str());
+        // LOG_INFO("Connection DOWN : %s", conn->peerAddress().toIpPort().c_str());
     }
 }
 
 void HttpServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, TimeStamp receiveTime)
 {
+    // clock_t start,end;
+    // start = clock();
     HttpContext* context = boost::any_cast<HttpContext>(conn->getMutableContext());
 
     
@@ -65,6 +67,8 @@ void HttpServer::onMessage(const TcpConnectionPtr& conn, Buffer* buf, TimeStamp 
         onRequest(conn, context->request());
         context->reset();
     }
+    // end = clock();
+    // cout<<"time = "<<double(end-start)/CLOCKS_PER_SEC<<"s"<<endl;
     // LOG_INFO("Message UP 3 : %s", conn->peerAddress().toIpPort().c_str());
 }
 
